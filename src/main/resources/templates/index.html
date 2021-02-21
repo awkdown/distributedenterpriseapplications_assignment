@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutors</title>
+</head>
+<body>
+    <form th:action="@{/tutors/add}" th:object="${tutor}" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password (Hashed)</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${tutors.empty}">
+                <td colspan="2"></td>
+            </tr>
+            <tr th:each="tutor : ${tutors}">
+                <td><span th:text="{$tutor.tutor_name}">Name</span></td>
+                <td><span th:text="{$tutor.tutor_email}">Email</span></td>
+                <td><span th:text="{$tutor.tutor_password}">Password</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+</html>
