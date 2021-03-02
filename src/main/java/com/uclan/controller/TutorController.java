@@ -23,11 +23,13 @@ public class TutorController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @GetMapping("/tutors")
+    @GetMapping("/uclan/tutors")
     public String getIngredients(Model model) {
         model.addAttribute(MODEL_TUTOR, tutorService.getTutors());
-        return "show/show-ingredients";
+        return "index";
     }
+
+
 
     @PostMapping("/tutors/add")
     public String insertTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result) {
