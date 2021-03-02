@@ -1,6 +1,6 @@
-package controller;
+package com.uclan.controller;
 
-import domain.Tutor;
+import com.uclan.domain.Tutor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import service.TutorService;
+import com.uclan.service.TutorService;
 
 import javax.validation.Valid;
 

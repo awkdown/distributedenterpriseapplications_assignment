@@ -1,6 +1,5 @@
-package domain;
+package com.uclan.domain;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +20,7 @@ import javax.validation.constraints.Email;
 @Table(name = "tutor")
 public class Tutor extends BaseEntity<Long> {
 
-    @Column(name = "tutor name")
+    @Column(name = "tutor_name")
     private String tutorname;
 
     @NotNull

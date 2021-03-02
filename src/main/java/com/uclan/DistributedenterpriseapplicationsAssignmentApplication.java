@@ -1,4 +1,4 @@
-package com.uclan.distributedenterpriseapplications_assignment;
+package com.uclan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

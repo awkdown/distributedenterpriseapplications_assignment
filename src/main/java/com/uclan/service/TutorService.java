@@ -1,12 +1,12 @@
-package service;
+package com.uclan.service;
 
 import com.sun.istack.NotNull;
-import domain.Tutor;
+import com.uclan.domain.Tutor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import repository.TutorRepository;
+import com.uclan.repository.TutorRepository;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -21,7 +21,7 @@ public class TutorService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public List<Tutor> getTutors() {
-        logger.debug("Retrieving {} tutor from repository", tutorRepository.count());
+        logger.debug("Retrieving {} tutor from com.uclan.repository", tutorRepository.count());
         return tutorRepository.findAll();
     }
 
