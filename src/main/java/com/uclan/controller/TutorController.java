@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.uclan.service.TutorService;
 
@@ -23,19 +24,45 @@ public class TutorController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @GetMapping("/uclan/tutors")
-    public String getIngredients(Model model) {
-        model.addAttribute(MODEL_TUTOR, tutorService.getTutors());
-        return "index";
+    @ModelAttribute("tutor")
+    public Tutor getForm() {
+        return new Tutor();
     }
 
+    @GetMapping("/uclan/tutors")
+    public String getTutors(Model model) {
+        model.addAttribute(MODEL_TUTOR, tutorService.getTutors());
+        return "show-tutors";
+    }
 
-
-    @PostMapping("/tutors/add")
-    public String insertTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result) {
-        if (result.hasErrors())
-            return "show/show-tutors";
+    @PostMapping("/uclan/tutors/add")
+    public String insertTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result, Model model) {
+        Tutor isAlreadyInDb = tutorService.getTutorById(tutor.getEmail());
+        if (result.hasErrors() || isAlreadyInDb != null) {
+            model.addAttribute("tutors", tutorService.getTutors());
+            return getTutors(model);
+        }
         tutorService.createTutor(tutor);
-        return "redirect:tutors";
+        return "redirect:/uclan/tutors";
+    }
+
+    @PostMapping("/uclan/tutors/{id}/delete")
+    public String deleteTutor(@PathVariable("id") long id) {
+        try {
+            tutorService.delete(id);
+        } catch(Exception ex)
+        {
+            return "show-tutors";
+        }
+        return "redirect:/uclan/tutors";
+    }
+
+    @PostMapping("")
+    public String updateTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result)
+    {
+        if(result.hasErrors())
+            return "show-tutors";
+        tutorService.update(tutor);
+        return "redirect:/uclan/tutors";
     }
 }

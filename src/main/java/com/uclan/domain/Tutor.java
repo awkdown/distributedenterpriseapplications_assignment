@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -23,9 +24,9 @@ public class Tutor extends BaseEntity<Long> {
     @Column(name = "tutor_name")
     private String tutorname;
 
-    @NotNull
+    @NotEmpty
     @Email(message = "must use a valid mail")
-    @Column(name = "tutor_mail")
+    @Column(name = "tutor_mail", unique = true)
     private String email;
 
     @NotNull

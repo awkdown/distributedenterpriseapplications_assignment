@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping(value = {"/", "index", "home", "/uclan"})
     public String index() {
-        return "redirect:/uclan/tutors";
+        return "index";
     }
 }
