@@ -1,6 +1,7 @@
 package com.uclan.controller;
 
 import com.uclan.domain.Tutor;
+import com.uclan.service.TutorService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import com.uclan.service.TutorService;
 
 import javax.validation.Valid;
 
@@ -38,7 +38,10 @@ public class TutorController {
     @PostMapping("/uclan/tutors/add")
     public String insertTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result, Model model) {
         Tutor isAlreadyInDb = tutorService.getTutorById(tutor.getEmail());
-        if (result.hasErrors() || isAlreadyInDb != null) {
+        if (isAlreadyInDb != null) {
+            model.addAttribute("errorMsg", "Integrity violation!");
+            return getTutors(model);
+        } else if (result.hasErrors()) {
             model.addAttribute("tutors", tutorService.getTutors());
             return getTutors(model);
         }
@@ -50,17 +53,15 @@ public class TutorController {
     public String deleteTutor(@PathVariable("id") long id) {
         try {
             tutorService.delete(id);
-        } catch(Exception ex)
-        {
+        } catch (Exception ex) {
             return "show-tutors";
         }
         return "redirect:/uclan/tutors";
     }
 
     @PostMapping("")
-    public String updateTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result)
-    {
-        if(result.hasErrors())
+    public String updateTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result) {
+        if (result.hasErrors())
             return "show-tutors";
         tutorService.update(tutor);
         return "redirect:/uclan/tutors";

@@ -7,15 +7,20 @@
 </head>
 <style>
     table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
+        border: 1px solid black;
+        border-collapse: collapse;
     }
+
     th, td {
-    padding: 15px;
+        padding: 15px;
     }
 </style>
 <body>
 <form th:action="@{/uclan/tutors/add}" th:object="${tutor}" method="post">
+    <!-- Can style that to look like an error msg -->
+    <div th:if="${errorMsg}">
+        <div th:text="${errorMsg}"></div>
+    </div>
     <label for="name">Name</label>
     <input th:field="*{tutorname}" placeholder="Tutor Name"
            id="name"/>
@@ -29,35 +34,35 @@
            id="password"/>
     <button id="addTutor" type="submit">Add tutor</button>
 </form>
-    <table>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Password (Hashed)</th>
-            <th>Wanna delete?</th>
-            <th>Wanna update?</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:if="${tutors.empty}">
-            <td colspan="2"></td>
-        </tr>
-        <tr th:each="tutor : ${tutors}">
-            <td><span th:text="${tutor.tutorname}">Name</span></td>
-            <td><span th:text="${tutor.email}">Email</span></td>
-            <td><span th:text="${tutor.password}">Password</span></td>
-            <td>
-                <form th:action="@{/uclan/tutors/{id}/delete(id=${tutor.id})}" th:object="${tutor}" method="post">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-            <td>
-                <button id="btnFill">Update</button>
-            </td>
-        </tr>
-        </tbody>
-        <script src="/webjars/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
-    </table>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password (Hashed)</th>
+        <th>Wanna delete?</th>
+        <th>Wanna update?</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${tutors.empty}">
+        <td colspan="2"></td>
+    </tr>
+    <tr th:each="tutor : ${tutors}">
+        <td><span th:text="${tutor.tutorname}">Name</span></td>
+        <td><span th:text="${tutor.email}">Email</span></td>
+        <td><span th:text="${tutor.password}">Password</span></td>
+        <td>
+            <form th:action="@{/uclan/tutors/{id}/delete(id=${tutor.id})}" th:object="${tutor}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+        <td>
+            <button id="btnFill">Update</button>
+        </td>
+    </tr>
+    </tbody>
+    <script src="/webjars/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+</table>
 </body>
 </html>
