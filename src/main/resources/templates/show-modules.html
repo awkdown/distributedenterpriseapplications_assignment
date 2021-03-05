@@ -3,7 +3,7 @@
       layout:decorate="~{layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Tutors</title>
+    <title>Modules</title>
 </head>
 <style>
     table, th, td {
@@ -45,49 +45,43 @@
 
 </style>
 <body>
+<form th:action="@{/uclan/modules/add}" th:object="${module}" method="post">
+    <label for="name">Name</label>
+    <input th:field="*{name}" placeholder="Module Name"
+           id="name"/>
+    <label for="moduleLeader">Module Leader</label>
+    <input th:field="*{moduleLeader}" placeholder="Module Leader"
+           id="moduleLeader"/>
+    <label for="description">Password</label>
+    <input th:field="*{description}" placeholder="Description"
+           id="description"/>
+    <button id="addModule" type="submit">Add Module</button>
+</form>
 <div class="topnav">
-    <a class="active" href="/uclan/tutors">Tutors</a>
-    <a href="#modules">Modules</a>
+    <a href="/uclan/tutors">Tutors</a>
+    <a class="active" href="/uclan/modules">Modules</a>
     <a href="#labsessions">Lab Sessions</a>
 </div>
-<form th:action="@{/uclan/tutors/add}" th:object="${tutor}" method="post">
-    <!-- Can style that to look like an error msg -->
-    <div th:if="${errorMsg}">
-        <div th:text="${errorMsg}"></div>
-    </div>
-    <label for="name">Name</label>
-    <input th:field="*{tutorname}" placeholder="Tutor Name"
-           id="name"/>
-    <label for="email">Email</label>
-    <input th:field="*{email}" placeholder="Tutor Email"
-           id="email"/>
-    <span class="col-form-label" style="color:red"
-          th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-    <label for="password">Password</label>
-    <input th:field="*{password}" placeholder="Tutor Password"
-           id="password"/>
-    <button id="addTutor" type="submit">Add tutor</button>
-</form>
 <table>
     <thead>
     <tr>
         <th>Name</th>
-        <th>Email</th>
-        <th>Password (Hashed)</th>
+        <th>Module Leader</th>
+        <th>Description</th>
         <th>Wanna delete?</th>
         <th>Wanna update?</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${tutors.empty}">
+    <tr th:if="${modules.empty}">
         <td colspan="2"></td>
     </tr>
-    <tr th:each="tutor : ${tutors}">
-        <td><span th:text="${tutor.tutorname}">Name</span></td>
-        <td><span th:text="${tutor.email}">Email</span></td>
-        <td><span th:text="${tutor.password}">Password</span></td>
+    <tr th:each="module : ${modules}">
+        <td><span th:text="${module.name}">Name</span></td>
+        <td><span th:text="${module.moduleLeader}">Module Leader</span></td>
+        <td><span th:text="${module.description}">Description</span></td>
         <td>
-            <form th:action="@{/uclan/tutors/{id}/delete(id=${tutor.id})}" th:object="${tutor}" method="post">
+            <form th:action="@{/uclan/modules/{id}/delete(id=${module.id})}" th:object="${module}" method="post">
                 <button type="submit">Delete</button>
             </form>
         </td>

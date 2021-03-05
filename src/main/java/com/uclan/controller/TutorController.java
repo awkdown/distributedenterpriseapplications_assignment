@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-
 @Controller
 public class TutorController {
     private static final String MODEL_TUTOR = "tutors";
