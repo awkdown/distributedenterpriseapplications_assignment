@@ -45,23 +45,29 @@
 
 </style>
 <body>
-<form th:action="@{/uclan/modules/add}" th:object="${module}" method="post">
-    <label for="name">Name</label>
-    <input th:field="*{name}" placeholder="Module Name"
-           id="name"/>
-    <label for="moduleLeader">Module Leader</label>
-    <input th:field="*{moduleLeader}" placeholder="Module Leader"
-           id="moduleLeader"/>
-    <label for="description">Password</label>
-    <input th:field="*{description}" placeholder="Description"
-           id="description"/>
-    <button id="addModule" type="submit">Add Module</button>
-</form>
 <div class="topnav">
     <a href="/uclan/tutors">Tutors</a>
     <a class="active" href="/uclan/modules">Modules</a>
     <a href="#labsessions">Lab Sessions</a>
 </div>
+<form th:action="@{/uclan/modules/add}" th:object="${module}" method="post">
+    <div th:if="${errorMsg}">
+        <div th:text="${errorMsg}"></div>
+    </div>
+    <label for="name">Name</label>
+    <input th:field="*{name}" placeholder="Module Name"
+           id="name"/>
+    <label >Module Leader</label>
+    <select id="dropTutors" >
+        <option th:each="tutor : ${tutors}" th:value="${tutor.email}" th:text="${tutor.tutorname}"></option>
+    </select>
+
+    <label for="description">Description</label>
+    <input th:field="*{description}" placeholder="Description"
+           id="description"/>
+    <button id="addModule" type="submit">Add Module</button>
+</form>
+
 <table>
     <thead>
     <tr>

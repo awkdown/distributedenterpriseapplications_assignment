@@ -1,6 +1,7 @@
 package com.uclan.service;
 
 import com.sun.istack.NotNull;
+import com.uclan.domain.Module;
 import com.uclan.domain.Tutor;
 import com.uclan.repository.ModuleReporsitory;
 import com.uclan.repository.TutorRepository;
@@ -33,5 +34,15 @@ public class ModuleService {
 
     public Module createModule(@NotNull @Valid Module module) {
         return moduleReporsitory.save(module);
+    }
+
+    public Module getModuleById(String name) {
+        Module module = null;
+        try {
+            module =  moduleReporsitory.findByName(name).orElseThrow();
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return module;
     }
 }
