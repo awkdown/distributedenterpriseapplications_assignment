@@ -21,15 +21,16 @@ import javax.validation.constraints.NotNull;
 @Table(name = "tutor")
 public class Tutor extends BaseEntity<Long> {
 
+    @NotEmpty(message = "Please enter a password")
     @Column(name = "tutor_name")
     private String tutorname;
 
-    @NotEmpty
+    @NotEmpty(message = "Please enter an email")
     @Email(message = "must use a valid mail")
     @Column(name = "tutor_mail", unique = true)
     private String email;
 
-    @NotNull
+    @NotEmpty (message = "Enter Password")
     @Column(name = "tutor_password")
     private String password;
 }

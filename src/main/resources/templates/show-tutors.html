@@ -54,11 +54,13 @@
     <form th:action="@{/uclan/tutors/add}" th:object="${tutor}" method="post">
         <!-- Can style that to look like an error msg -->
         <div th:if="${errorMsg}">
-            <div th:text="${errorMsg}"></div>
+            <div th:text="${errorMsg}" th:bgcolor="red"></div>
         </div>
         <label for="name">Name</label>
         <input th:field="*{tutorname}" placeholder="Tutor Name"
                id="name"/>
+        <span class="col-form-label" style="color:red"
+              th:if="${#fields.hasErrors('tutorname')}" th:errors="*{tutorname}"></span>
         <label for="email">Email</label>
         <input th:field="*{email}" placeholder="Tutor Email"
                id="email"/>
@@ -67,6 +69,8 @@
         <label for="password">Password</label>
         <input th:field="*{password}" placeholder="Tutor Password"
                id="password"/>
+        <span class="col-form-label" style="color:red"
+              th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
         <button id="addTutor" type="submit">Add tutor</button>
     </form>
 </div>

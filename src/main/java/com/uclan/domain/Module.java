@@ -3,6 +3,7 @@ package com.uclan.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -19,11 +20,12 @@ public class Module extends BaseEntity<Long> {
     @Column(name = "module_name", unique = true)
     private String name;
 
-    @NotNull(message = "cannot be empty")
+    @NotBlank(message = "cannot be empty")
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_email")
     private Tutor moduleLeader;
 
+    @NotEmpty(message = "cannot be empty")
     @Column (name = "module_description")
     private String description;
 }
