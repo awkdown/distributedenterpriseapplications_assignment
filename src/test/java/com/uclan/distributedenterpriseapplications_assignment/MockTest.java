@@ -17,18 +17,27 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
+@Configuration
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class MockTest {
+
+    @Configuration
+    static class ContextConfiguration {
+        @Bean
+        public BCryptPasswordEncoder encoder() {
+            return new BCryptPasswordEncoder();
+        }
+    }
 
     private TutorService tutorService;
 
@@ -45,10 +54,8 @@ public class MockTest {
     @MockBean
     private LabSessionRepository labSessionRepository;
 
-    @Bean
-    public BCryptPasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     @BeforeAll
     void setup() {
@@ -56,9 +63,9 @@ public class MockTest {
         assertThat(tutorRepository).isNotNull();
         assertThat(moduleReporsitory).isNotNull();
         assertThat(labSessionRepository).isNotNull();
-        tutorService = new TutorService(tutorRepository, null);
+        tutorService = new TutorService(tutorRepository, encoder);
         moduleService = new ModuleService(moduleReporsitory, null);
-        labSessionService = new LabSessionService(labSessionRepository,  null);
+        labSessionService = new LabSessionService(labSessionRepository, null);
     }
 
     @Test
