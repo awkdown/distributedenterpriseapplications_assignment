@@ -1,13 +1,14 @@
 package com.uclan.controller;
 
+import com.uclan.domain.Module;
 import com.uclan.domain.Tutor;
 import com.uclan.service.TutorService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 public class TutorController {
     private static final String MODEL_TUTOR = "tutors";
     private final TutorService tutorService;
-
+    private final PasswordEncoder encoder;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ModelAttribute("tutor")
@@ -37,7 +38,7 @@ public class TutorController {
 
     @PostMapping("/uclan/tutors/add")
     public String insertTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result, Model model) {
-        Tutor isAlreadyInDb = tutorService.getTutorById(tutor.getEmail());
+        Tutor isAlreadyInDb = tutorService.getTutorByEmail(tutor.getEmail());
         if (isAlreadyInDb != null) {
             model.addAttribute("errorMsg", "Integrity violation!");
             return getTutors(model);
@@ -59,11 +60,20 @@ public class TutorController {
         return "redirect:/uclan/tutors";
     }
 
-    @PostMapping("/uclan/tutors/{id}/edit")
-    public String updateTutor(@ModelAttribute @Valid Tutor tutor, BindingResult result) {
+    @GetMapping("/uclan/tutors/{id}/update")
+    public String editUpdateForm(@PathVariable Long id, Model model) {
+        Tutor tutor = tutorService.getTutorById(id);
+        //tutor.setPassword(encoder.de);
+        model.addAttribute("updateTutor", tutorService.getTutorById(id));
+        model.addAttribute("tutors", tutorService.getTutors());
+        return "show-tutors";
+    }
+
+    @PostMapping("/uclan/tutors/{id}/update")
+    public String updateTutor(@PathVariable Long id, @ModelAttribute("updateTutor") @Valid Tutor tutor, BindingResult result, Model model) {
         if (result.hasErrors())
             return "show-tutors";
-        tutorService.update(tutor);
+        tutorService.update(id, tutor);
         return "redirect:/uclan/tutors";
     }
 }

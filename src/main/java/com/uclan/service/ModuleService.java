@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -36,7 +37,7 @@ public class ModuleService {
         return moduleReporsitory.save(module);
     }
 
-    public Module getModuleById(String name) {
+    public Module getModuleByEmail(String name) {
         Module module = null;
         try {
             module =  moduleReporsitory.findByName(name).orElseThrow();
@@ -44,5 +45,36 @@ public class ModuleService {
             System.out.println(ex.getMessage());
         }
         return module;
+    }
+
+    public Module getModuleById(long id) {
+        Module module = null;
+        try {
+            module =  moduleReporsitory.findById(id).orElseThrow();
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return module;
+    }
+
+    public void update( Long id, @NotNull @Valid Module module) {
+        Module moduleToUpdate = moduleReporsitory.findById(id).orElseThrow();
+        moduleToUpdate.setName(module.getName());
+        moduleToUpdate.setModuleLeader(module.getModuleLeader());
+        moduleToUpdate.setDescription(module.getDescription());
+    }
+
+    public Module getModuleByTutor(@NotNull @Valid Tutor moduleLeader) {
+        Module module = null;
+        try {
+            module = moduleReporsitory.findByModuleLeader(moduleLeader).orElseThrow();
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return module;
+    }
+
+    public void delete(long id) {
+        moduleReporsitory.deleteById(id);
     }
 }

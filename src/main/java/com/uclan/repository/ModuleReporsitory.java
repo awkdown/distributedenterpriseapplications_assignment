@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ModuleReporsitory extends JpaRepository<Module, Long> {
     Optional<Module> findByName(String name);
+    Optional<Module> findByModuleLeader(Tutor moduleLeader);
 }

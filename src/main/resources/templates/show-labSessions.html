@@ -4,7 +4,7 @@
       layout:decorate="~{layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Modules</title>
+    <title>LabSession</title>
 </head>
 <style>
     table, th, td {
@@ -48,30 +48,35 @@
 <body>
 <div class="topnav">
     <a href="/uclan/tutors">Tutors</a>
-    <a class="active" href="/uclan/modules">Modules</a>
-    <a href="/uclan/labSessions">Lab Sessions</a>
+    <a href="/uclan/modules">Modules</a>
+    <a class="active" href="/uclan/labSessions">Lab Sessions</a>
     <a th:href="@{/logout}">Logout</a>
 </div>
-
-<div th:if="${updateModule == null}">
-    <form th:action="@{/uclan/modules/add}" th:object="${module}" method="post">
+<div th:if="${updateLabSession == null}">
+    <form th:action="@{/uclan/labSessions/add}" th:object="${labSession}" method="post">
         <div th:if="${errorMsg}">
             <div th:text="${errorMsg}"></div>
         </div>
 
         <label for="name">Name</label>
-        <input th:field="*{name}" placeholder="Module Name"
+        <input th:field="*{name}" placeholder="Lab Session Name"
                id="name"/>
         <span class="col-form-label" style="color:red"
               th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
-        <label >Module Leader</label>
-        <select th:field="*{moduleLeader}">
+        <label>Lab Session Leader</label>
+        <select th:field="*{sessionLeader}">
             <option th:each="tutor : ${tutors}" th:value="${tutor.id}" th:text="${tutor.tutorname}"></option>
         </select>
         <span class="col-form-label" style="color:red"
-              th:if="${#fields.hasErrors('moduleLeader')}" th:errors="*{moduleLeader}">
-    </span>
+              th:if="${#fields.hasErrors('module.moduleLeader')}" th:errors="*{module.moduleLeader}"></span>
+
+        <label>Module</label>
+        <select th:field="*{module}">
+            <option th:each="module : ${modules}" th:value="${module.id}" th:text="${module.name}"></option>
+        </select>
+        <span class="col-form-label" style="color:red"
+              th:if="${#fields.hasErrors('module')}" th:errors="*{module}"></span>
 
         <label for="description">Description</label>
         <input th:field="*{description}" placeholder="Description"
@@ -79,60 +84,71 @@
         <span class="col-form-label" style="color:red"
               th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
 
-        <button id="addModule" type="submit">Add Module</button>
+        <button id="addModule" type="submit">Add Lab Session</button>
     </form>
 </div>
-<div th:if="${updateModule != null}">
-    <form th:action="@{/uclan/modules/{id}/update(id=${updateModule.id})}" th:object="${updateModule}" method="post">
+<div th:if="${updateLabSession != null}">
+    <form th:action="@{/uclan/labSessions/{id}/update(id=${updateLabSession.id})}" th:object="${updateLabSession}" method="post">
         <div th:if="${errorMsg}">
             <div th:text="${errorMsg}"></div>
         </div>
 
         <label for="name">Name</label>
-        <input th:field="${updateModule.name}" th:name="updateName"
+        <input th:field="${updateLabSession.name}" th:name="updateName"
                th:id="updateName"/>
         <span class="col-form-label" style="color:red"
               th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
-        <label >Module Leader</label>
-        <select th:field="*{moduleLeader}">
+        <label>Lab Session Leader</label>
+        <select th:field="*{sessionLeader}">
             <option th:each="tutor : ${tutors}" th:value="${tutor.id}" th:text="${tutor.tutorname}"></option>
         </select>
         <span class="col-form-label" style="color:red"
-              th:if="${#fields.hasErrors('moduleLeader')}" th:errors="*{moduleLeader}">
-    </span>
+              th:if="${#fields.hasErrors('module.moduleLeader')}" th:errors="*{module.moduleLeader}"></span>
+
+        <label>Module</label>
+        <select th:field="*{module}">
+            <option th:each="module : ${modules}" th:value="${module.id}" th:text="${module.name}"></option>
+        </select>
+        <span class="col-form-label" style="color:red"
+              th:if="${#fields.hasErrors('module')}" th:errors="*{module}"></span>
 
         <label for="description">Description</label>
-        <input th:field="${updateModule.description}" th:name="updateDescription"
+        <input th:field="${updateLabSession.description}" th:name="updateDescription"
                th:id="updateDescription"/>
         <span class="col-form-label" style="color:red"
               th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
 
-        <button type="submit">Update Module</button>
+        <button type="submit">Update Lab Session</button>
     </form>
 </div>
 <table>
     <thead>
     <tr>
         <th>Name</th>
-        <th>Module Leader</th>
+        <th>Lab Session Leader</th>
+        <th>Module</th>
         <th>Description</th>
         <th>Wanna delete?</th>
         <th>Wanna update?</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="module : ${modules}">
-        <td><span th:text="${module.name}">Name</span></td>
-        <td><span th:text="${module.moduleLeader.tutorname}">Module Leader</span></td>
-        <td><span th:text="${module.description}">Description</span></td>
+    <tr th:if="${labSessions.empty}">
+        <td colspan="2"></td>
+    </tr>
+    <tr th:each="labSession : ${labSessions}">
+        <td><span th:text="${labSession.name}">Name</span></td>
+        <td><span th:text="${labSession.module.moduleLeader.tutorname}">Session Leader</span></td>
+        <td><span th:text="${labSession.module.name}">Module</span></td>
+        <td><span th:text="${labSession.description}">Description</span></td>
         <td>
-            <form th:action="@{/uclan/modules/{id}/delete(id=${module.id})}" th:object="${module}" method="post">
+            <form th:action="@{/uclan/labSessions/{id}/delete(id=${labSession.id})}" th:object="${labSession}" method="post">
                 <button type="submit">Delete</button>
             </form>
         </td>
         <td>
-            <form th:action="@{/uclan/modules/{id}/update(id=${module.id})}" th:object="${module}" method="get">
+            <form th:action="@{/uclan/labSessions/{id}/update(id=${labSession.id})}" th:object="${labSession}" method="get">
                 <button type="submit">Update</button>
             </form>
         </td>

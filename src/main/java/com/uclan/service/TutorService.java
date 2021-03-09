@@ -13,8 +13,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
-
-
 @Service
 @Transactional
 public class TutorService {
@@ -42,17 +40,31 @@ public class TutorService {
         tutorRepository.deleteById(id);
     }
 
-    public void update(@NotNull @Valid Tutor tutor) {
-        Tutor tutorToUpdate = tutorRepository.findByEmail(tutor.getEmail()).orElseThrow();
+    public void update(Long id, @NotNull @Valid Tutor tutor) {
+        Tutor tutorToUpdate = tutorRepository.findById(id).orElseThrow();
         tutorToUpdate.setEmail(tutor.getEmail());
         tutorToUpdate.setTutorname(tutor.getTutorname());
-        tutorToUpdate.setPassword(tutor.getPassword());
+        if(tutor.getPassword().equals(tutorToUpdate.getPassword())) {
+            tutorToUpdate.setPassword(tutor.getPassword());
+        } else {
+            tutorToUpdate.setPassword(encoder.encode(tutor.getPassword()));
+        }
     }
 
-    public Tutor getTutorById(String email) {
+    public Tutor getTutorByEmail(String email) {
         Tutor tutor = null;
         try {
             tutor =  tutorRepository.findByEmail(email).orElseThrow();
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return tutor;
+    }
+
+    public Tutor getTutorById(long id) {
+        Tutor tutor = null;
+        try {
+            tutor =  tutorRepository.findById(id).orElseThrow();
         } catch(Exception ex) {
             System.out.println(ex.getMessage());
         }
