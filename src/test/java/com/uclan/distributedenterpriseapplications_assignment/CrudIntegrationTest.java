@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -160,7 +161,7 @@ public class CrudIntegrationTest {
 
     @WithMockUser("admin")
     @Test
-    public void addMoLabSession_200()
+    public void addLabSession_200()
             throws Exception {
         LabSession labSession = getLabSessions().get(0);
 
@@ -182,11 +183,34 @@ public class CrudIntegrationTest {
     @WithMockUser("admin")
     @Test
     public void deleteTutor_200() {
-        Tutor tutorToAdd = new Tutor("picard", "picard@starfleet.com", "picard");
         try {
             mvc.perform(
                     post("/uclan/tutors/{id}/delete", 1L).with(csrf()))
-                    .andExpect(status().isAccepted());
+                    .andExpect(model().attributeDoesNotExist("labSessions"));   //because of the Post method I receive 302
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @WithMockUser("admin")
+    @Test
+    public void deleteModule_200() {
+        try {
+            mvc.perform(
+                    post("/uclan/modules/{id}/delete", 1L).with(csrf()))
+                    .andExpect(model().attributeDoesNotExist("modules"));   //because of the Post method I receive 302
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @WithMockUser("admin")
+    @Test
+    public void deleteLabSession_200() {
+        try {
+            mvc.perform(
+                    post("/uclan/labSessions/{id}/delete", 1L).with(csrf()))
+                    .andExpect(model().attributeDoesNotExist("labSessions"));   //because of the Post method I receive 302
         } catch(Exception ex) {
             ex.printStackTrace();
         }

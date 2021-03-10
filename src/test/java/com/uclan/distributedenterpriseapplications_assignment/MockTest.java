@@ -23,7 +23,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -64,8 +67,8 @@ public class MockTest {
         assertThat(moduleReporsitory).isNotNull();
         assertThat(labSessionRepository).isNotNull();
         tutorService = new TutorService(tutorRepository, encoder);
-        moduleService = new ModuleService(moduleReporsitory, null);
-        labSessionService = new LabSessionService(labSessionRepository, null);
+        moduleService = new ModuleService(moduleReporsitory, encoder);
+        labSessionService = new LabSessionService(labSessionRepository, encoder);
     }
 
     @Test
@@ -117,9 +120,27 @@ public class MockTest {
     }
 
     @Test
-    public void deleteLabSession() {
-        labSessionService.delete(1L);
-        Mockito.verify(labSessionRepository).deleteById(Mockito.any());
+    void updateTutor() {
+        when(tutorRepository.findById(1L)).thenReturn(Optional.ofNullable(getTutuor()));
+        Tutor tutor = new Tutor("kirk", "kirk@gmail.com", "kirk");
+        tutorService.update(1L, tutor);
+        assertThat(tutorService.getTutorById(1L).getTutorname()).isEqualTo(tutor.getTutorname());
+    }
+
+    @Test
+    void updateModule() {
+        when(moduleReporsitory.findById(1L)).thenReturn(Optional.ofNullable(getModule()));
+        Module module = new Module("DS", getTutuor(), "Data Science");
+        moduleService.update(1L, module);
+        assertThat(moduleService.getModuleById(1L).getName()).isEqualTo(module.getName());
+    }
+
+    @Test
+    void updateLabSession() {
+        when(labSessionRepository.findById(1L)).thenReturn(Optional.ofNullable(getLabSession()));
+        LabSession labSession = new LabSession("Java Beans", "What are Java Beans?", getModule(), getTutuor());
+        labSessionService.update(1L, labSession);
+        assertThat(labSessionService.getLabSessionById(1L).getName()).isEqualTo(labSession.getName());
     }
 
     private Tutor getTutuor() {
